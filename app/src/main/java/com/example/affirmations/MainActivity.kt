@@ -1,20 +1,7 @@
-/*
- * Copyright (C) 2023 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      https://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Declaración del paquete
 package com.example.affirmations
 
+// Imports necesarios para Android, Jetpack Compose y recursos
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -37,15 +24,20 @@ import com.example.affirmations.data.Datasource
 import com.example.affirmations.model.Affirmation
 import com.example.affirmations.ui.theme.AffirmationsTheme
 
+// Clase principal de la aplicación (punto de entrada)
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Establece el contenido de la UI usando Jetpack Compose
         setContent {
+            // Aplica el tema definido en ui/theme
             AffirmationsTheme {
+                // Crea un fondo que cubre toda la pantalla
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+                    // Llama a la función principal de la UI
                     AffirmationsApp()
                 }
             }
@@ -53,9 +45,11 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+// Función principal de la UI
 @Composable
 fun AffirmationsApp() {
     val layoutDirection = LocalLayoutDirection.current
+    // Crea un contenedor principal con relleno para las barras de estado
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -67,36 +61,42 @@ fun AffirmationsApp() {
                     .calculateEndPadding(layoutDirection),
             ),
     ) {
+        // Muestra la lista de afirmaciones cargadas desde el Datasource
         AffirmationList(
             affirmationList = Datasource().loadAffirmations()
         )
     }
 }
 
+// Muestra una lista vertical (LazyColumn) de tarjetas de afirmación
 @Composable
 fun AffirmationList(affirmationList: List<Affirmation>, modifier: Modifier = Modifier) {
     LazyColumn(modifier = modifier) {
+        // Recorre la lista de afirmaciones y crea una tarjeta para cada una
         items(affirmationList) { affirmation ->
             AffirmationCard(
                 affirmation = affirmation,
-                modifier = Modifier.padding(8.dp)
+                modifier = Modifier.padding(8.dp) // Espaciado entre tarjetas
             )
         }
     }
 }
 
+// Muestra una tarjeta con imagen y texto de una afirmación
 @Composable
 fun AffirmationCard(affirmation: Affirmation, modifier: Modifier = Modifier) {
     Card(modifier = modifier) {
         Column {
+            // Muestra la imagen asociada a la afirmación
             Image(
                 painter = painterResource(affirmation.imageResourceId),
                 contentDescription = stringResource(affirmation.stringResourceId),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(194.dp),
-                contentScale = ContentScale.Crop
+                    .height(194.dp), // Altura fija para la imagen
+                contentScale = ContentScale.Crop // Recorta para llenar el espacio
             )
+            // Muestra el texto de la afirmación
             Text(
                 text = LocalContext.current.getString(affirmation.stringResourceId),
                 modifier = Modifier.padding(16.dp),
@@ -106,10 +106,12 @@ fun AffirmationCard(affirmation: Affirmation, modifier: Modifier = Modifier) {
     }
 }
 
+// Vista previa en el editor de Android Studio
 @Preview(showBackground = true)
 @Composable
 private fun AffirmationCardPreview() {
     AffirmationsTheme {
+        // Muestra una tarjeta de ejemplo con un recurso simulado
         AffirmationCard(
             affirmation = Affirmation(R.string.affirmation1, R.drawable.image1)
         )
